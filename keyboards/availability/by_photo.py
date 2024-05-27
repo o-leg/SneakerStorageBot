@@ -55,7 +55,7 @@ def predict_top3_classes(downloaded_image):
     print(top_3_probabilities)
     print("Sum: ", sum(top_3_probabilities))
     # case: photo does not have sneakers in it or does not exist in database
-    if sum(list(top_3_probabilities.flatten())) < SNEAKERS_THRESHOLD: # or top_3_classes[0] < SNEAKERS_THRESHOLD:
+    if sum(top_3_probabilities) < SNEAKERS_THRESHOLD: # or top_3_classes[0] < SNEAKERS_THRESHOLD:
         return []
     return top_3_classes
 

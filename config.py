@@ -50,4 +50,4 @@ CLASS_MAPPING = {
 REVERSE_CLASS_MAPPING = {v: k for k, v in CLASS_MAPPING.items()}
 
 # threshold for sneakers existence on photo
-SNEAKERS_THRESHOLD = os.getenv("SNEAKERS_THRESHOLD")
+SNEAKERS_THRESHOLD = float(os.getenv("SNEAKERS_THRESHOLD"))
