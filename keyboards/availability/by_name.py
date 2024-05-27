@@ -1,10 +1,10 @@
-import random
-
+from db_api.body_formulator import RequestBodyFormulator
+from db_api.database_api import perform_request
+from keyboards.utils.output_formulator import format_sizes, format_message
 from loader import dp
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
-from ..constants import available_models
 
 
 class NameState(StatesGroup):
@@ -20,17 +20,14 @@ async def get_name(message: types.Message):
 @dp.message_handler(state=NameState.name)
 async def get_model_availability_by_name(message: types.Message, state: FSMContext):
     message_text = ' '.join(message.text.split())
-    available_models_metadata = available_models["name"].get(message_text, "No model found😢")
-    if isinstance(available_models_metadata, str):
-        await message.answer(available_models_metadata)
-    if isinstance(available_models_metadata, dict):
-        availability_by_size = available_models_metadata.get('availability_by_size')
-        sizes = '\t|\t'.join([str(curr[0]) for curr in availability_by_size])
-        size_availability = ' | '.join(["✅" if curr[1] else "❌" for curr in availability_by_size])
+    body_by_name_request = RequestBodyFormulator.form_by_name(message_text)
+    response = perform_request(body_by_name_request)
+    if not response:
+        await message.answer("No models found😢...")
+    else:
+        for found_model in response:
+            caption = format_message(found_model)
 
-        await message.answer(f"Model name: {message_text} \n\n "
-                             f"Available sizes: \n "
-                             f"{sizes} \n"
-                             f"{size_availability} \n\n"
-                             f"Article: {available_models_metadata.get('article')}")
+            await message.answer_photo(found_model["image"], caption=caption, parse_mode="Markdown")
+    print("Response: ", response)
     await state.finish()

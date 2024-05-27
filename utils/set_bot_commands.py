@@ -8,5 +8,6 @@ async def set_default_commands(dp):
             types.BotCommand("help", "Retrieve list of bot commands"),
             types.BotCommand("model_by_article", "Search for available models by article🖼🆑"),
             types.BotCommand("model_by_name", "Search for available models by name"),
+            types.BotCommand("model_by_photo", "Search for available models by photo"),
         ]
     )

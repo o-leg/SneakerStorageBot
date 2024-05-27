@@ -1,13 +1,13 @@
 """
 
 """
-import random
-
+from db_api.body_formulator import RequestBodyFormulator
+from db_api.database_api import perform_request
+from keyboards.utils.output_formulator import format_sizes, format_message
 from loader import dp
 from aiogram import types
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
-from ..constants import available_models
 
 
 class ArticleState(StatesGroup):
@@ -23,17 +23,17 @@ async def get_article(message: types.Message):
 @dp.message_handler(state=ArticleState.article)
 async def get_model_availability_by_article(message: types.Message, state: FSMContext):
     message_text = ' '.join(message.text.split())
-    available_models_metadata = available_models["article"].get(message_text, "No model found😢")
-    if isinstance(available_models_metadata, str):
-        await message.answer(available_models_metadata)
-    if isinstance(available_models_metadata, dict):
-        availability_by_size = available_models_metadata.get('availability_by_size')
-        sizes = '\t|\t'.join([str(curr[0]) for curr in availability_by_size])
-        size_availability = ' | '.join(["✅" if curr[1] else "❌" for curr in availability_by_size])
+    body_by_article_request = RequestBodyFormulator.form_by_article(message_text)
+    print("Body for request by article: ", body_by_article_request)
+    response = perform_request(body_by_article_request)
+    print("Response be article: ", response)
+    if not response:
+        await message.answer("No model found😢")
+    else:
+        found_model = response[0]
+        print(found_model['sizes'])
+        caption = format_message(found_model)
 
-        await message.answer(f"Model name: {available_models_metadata.get('name')} \n\n "
-                             f"Available sizes: \n "
-                             f"{sizes} \n"
-                             f"{size_availability} \n\n"
-                             f"Article: {message_text}")
+        await message.answer_photo(found_model["image"], caption=caption, parse_mode="Markdown")
+        print("Response: ", found_model)
     await state.finish()

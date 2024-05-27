@@ -127,7 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-.idea/
+../../../project_updated/.idea/
 # Files for me
 resourses.txt
 utils/misc/parsers/data
