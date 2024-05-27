@@ -1,6 +1,6 @@
 absl-py==2.1.0
 aiofiles==23.1.0
-aiogram
+aiogram==2.14.3
 aiohttp==3.8.3
 aiosignal==1.3.1
 annotated-types==0.6.0
@@ -54,7 +54,7 @@ mpmath==1.3.0
 multdict==0.0.5
 multidict==6.0.4
 namex==0.0.8
-numpy
+numpy==1.26.4
 onnxruntime==1.18.0
 opt-einsum==3.3.0
 optree==0.11.0
