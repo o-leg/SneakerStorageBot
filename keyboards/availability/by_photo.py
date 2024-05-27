@@ -1,5 +1,5 @@
 import numpy as np
-import tensorflow as tf
+import onnxruntime as rt
 
 from PIL import Image
 
@@ -39,10 +39,13 @@ def preprocess_input_custom(downloaded_image):
 
 
 def predict_class_probabilities(downloaded_image):
-    model = tf.keras.models.load_model(MODEL_TO_USE_PATH)
+    sess = rt.InferenceSession(MODEL_TO_USE_PATH)
+    input_name = sess.get_inputs()[0].name
+
     img = preprocess_input_custom(downloaded_image)
     img = np.expand_dims(img, axis=0)
-    return model.predict(img)
+    predicted_class_probabilities = sess.run(None, {input_name: img.astype(np.float32)})[0]
+    return predicted_class_probabilities
 
 
 def predict_top3_classes(downloaded_image):
@@ -85,4 +88,3 @@ async def get_model_availability_by_photo(message: types.Message, state: FSMCont
             await message.answer("Well, something might be wrong from our side😢. "
                                  "Please, reach out to us through @oleh_nulp, so that we can investigate the issue.")
     await state.finish()
-

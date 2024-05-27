@@ -8,7 +8,8 @@ DB_API_URL = os.getenv("DB_API_URL")
 DB_API_AUTH_TOKEN = os.getenv("DB_API_AUTH_TOKEN")
 
 # Other variables
-MODEL_TO_USE_PATH = "models/efficient_net_b1.h5"
+MODEL_TO_USE_PATH = "models/efficient_net_b1.onnx"
+
 
 CLASS_MAPPING = {
   '10010': 0,
@@ -49,4 +50,4 @@ CLASS_MAPPING = {
 REVERSE_CLASS_MAPPING = {v: k for k, v in CLASS_MAPPING.items()}
 
 # threshold for sneakers existence on photo
-SNEAKERS_THRESHOLD = os.getenv("SNEAKERS_THRESHOLD")
+SNEAKERS_THRESHOLD = float(os.getenv("SNEAKERS_THRESHOLD"))
